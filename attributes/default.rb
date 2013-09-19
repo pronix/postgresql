@@ -1,4 +1,3 @@
-#
 # Cookbook Name:: postgresql
 # Attributes:: postgresql
 #
@@ -49,7 +48,7 @@ when "ubuntu"
   when node['platform_version'].to_f <= 11.04
     default['postgresql']['version'] = "8.4"
   else
-    default['postgresql']['version'] = "9.1"
+    default['postgresql']['version'] = "9.3"
   end
 
   default['postgresql']['dir'] = "/etc/postgresql/#{node['postgresql']['version']}/main"
@@ -178,6 +177,16 @@ when 'rhel', 'fedora', 'suse'
   default['postgresql']['config']['default_text_search_config'] = 'pg_catalog.english'
 end
 
+default['postgresql']['config']['hot_standby'] = 'off'
+default['postgresql']['config']['max_standby_archive_delay'] = '30s'
+default['postgresql']['config']['max_standby_streaming_delay'] = '30s'
+default['postgresql']['config']['wal_receiver_status_interval'] = '10s'
+default['postgresql']['config']['hot_standby_feedback'] = 'off'
+default['postgresql']['config']['wal_level'] = 'minimal'
+default['postgresql']['config']['archive_mode'] = 'off'
+default['postgresql']['config']['archive_command'] = ''
+default['postgresql']['config']['max_wal_senders'] = ''
+
 default['postgresql']['pg_hba'] = [
   {:type => 'local', :db => 'all', :user => 'postgres', :addr => nil, :method => 'ident'},
   {:type => 'local', :db => 'all', :user => 'all', :addr => nil, :method => 'ident'},
@@ -223,6 +232,8 @@ default['postgresql']['pgdg']['repo_rpm_url'] = {
     },
     "redhat" => {
       "6" => {
+        # # encoding: utf-8
+        # encoding: utf-8
         "i386" => "http://yum.postgresql.org/9.2/redhat/rhel-6-i386/pgdg-redhat92-9.2-7.noarch.rpm",
         "x86_64" => "http://yum.postgresql.org/9.2/redhat/rhel-6-x86_64/pgdg-redhat92-9.2-7.noarch.rpm"
       },
