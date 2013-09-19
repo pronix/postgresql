@@ -102,7 +102,7 @@ end
 bash "replicate slave from master" do
   user 'postgres'
   code <<-EOH
-pg_basebackup -w -R -h --dbname="host=#{node['postgresql']['master_ip']} user=#{node['postgresql']['recovery_user']} password=#{node['postgresql']['recovery_user_pass']}" -D - -P -Ft | bzip2 > /tmp/pg_basebackup.tar.bz2
+pg_basebackup -w -R -h #{node['postgresql']['master_ip']} --dbname="host=#{node['postgresql']['master_ip']} user=#{node['postgresql']['recovery_user']} password=#{node['postgresql']['recovery_user_pass']}" -D - -P -Ft | bzip2 > /tmp/pg_basebackup.tar.bz2
 cd #{node['postgresql']['config']['data_directory']}
 rm -rf *
 tar -xjvf /tmp/pg_basebackup.tar.bz2
