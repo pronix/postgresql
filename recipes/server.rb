@@ -90,6 +90,15 @@ end
 #     setting the same password. This chef recipe doesn't have access to
 #     the plain text password, and testing the encrypted (md5 digest)
 #     version is not straight-forward.
+bash "create replica user" do
+  user 'postgres'
+  code <<-EOH
+echo "CREATE USER #{node['postgres']['recovery_user']} REPLICATION ENCRYPTED PASSWORD '#{node['postgresql']['recovery_user_pass']}';" | psql
+  EOH
+  action :run
+  only_if { node['postgres']['recovery_user'].size > 0 && node['postgres']['recovery_user_pass'].size > 0 }
+end
+
 bash "assign-postgres-password" do
   user 'postgres'
   code <<-EOH
