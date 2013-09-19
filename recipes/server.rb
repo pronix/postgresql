@@ -93,7 +93,7 @@ end
 bash "create replica user" do
   user 'postgres'
   code <<-EOH
-echo "CREATE USER #{node['postgres']['recovery_user']} REPLICATION ENCRYPTED PASSWORD '#{node['postgresql']['recovery_user_pass']}';" | psql
+echo "CREATE USER #{node['postgresql']['recovery_user']} REPLICATION ENCRYPTED PASSWORD '#{node['postgresql']['recovery_user_pass']}';" | psql
   EOH
   action :run
   only_if { node['postgres']['recovery_user'].size > 0 && node['postgres']['recovery_user_pass'].size > 0 }
