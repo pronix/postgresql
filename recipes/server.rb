@@ -96,7 +96,7 @@ bash "create replica user" do
 echo "CREATE USER #{node['postgresql']['recovery_user']} REPLICATION ENCRYPTED PASSWORD '#{node['postgresql']['recovery_user_pass']}';" | psql
   EOH
   action :run
-  only_if { node['postgresql']['recovery_user'].size > 0 && node['postgresql']['recovery_user_pass'].size > 0 }
+  only_if { node['postgresql']['recovery_user'].size > 0 && node['postgresql']['recovery_user_pass'].size > 0 && node['postgresql']['recovery']['standby_mode'] == 'off'}
 end
 
 bash "replicate slave from master" do
