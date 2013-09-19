@@ -57,6 +57,15 @@ when "debian"
   include_recipe "postgresql::server_debian"
 end
 
+template "#{node['postgresql']['dir']}/recovery.conf" do
+  source "recovery.conf.erb"
+  owner "postgres"
+  group "postgres"
+  mode 0600
+  notifies :reload, 'service[postgresql]', :immediately
+  only_if { node['postgresql']['recovery']['standby_mode'] == 'on' }
+end
+
 template "#{node['postgresql']['dir']}/postgresql.conf" do
   source "postgresql.conf.erb"
   owner "postgres"

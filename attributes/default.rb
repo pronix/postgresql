@@ -187,8 +187,14 @@ default['postgresql']['config']['archive_mode'] = 'off'
 default['postgresql']['config']['archive_command'] = ''
 default['postgresql']['config']['max_wal_senders'] = ''
 default['postgresql']['config']['wal_keep_segments'] = '4'
-default['postgresql']['config']['standby_mode'] = 'off'
 
+# attributes for recovery.conf
+default['postgresql']['recovery']['standby_mode'] = 'off'
+default['postgresql']['recovery']['restore_command'] = ''
+default['postgresql']['recovery']['archive_cleanup_command'] = ''
+default['postgresql']['recovery']['recovery_end_command'] = ''
+default['postgresql']['recovery']['primary_conninfo'] = ''
+default['postgresql']['recovery']['trigger_file'] = ''
 
 default['postgresql']['pg_hba'] = [
   {:type => 'local', :db => 'all', :user => 'postgres', :addr => nil, :method => 'ident'},
