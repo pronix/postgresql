@@ -111,7 +111,7 @@ touch ./slave_synced
 service postgresql start
   EOH
   action :run
-  only_if { !File.exists?(node['postgresql']['config']['data_directory']/slave_synced) && node['postgresql']['recovery']['standby_mode'] == 'on' }
+  only_if { !File.exists?("#{node['postgresql']['config']['data_directory']}/slave_synced") && node['postgresql']['recovery']['standby_mode'] == 'on' }
 end
 
 bash "assign-postgres-password" do
