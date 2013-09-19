@@ -107,7 +107,7 @@ pg_basebackup -w -R -h #{node['postgresql']['master_ip']} --dbname="host=#{node[
 cd #{node['postgresql']['config']['data_directory']}
 rm -rf *
 tar -xjvf /tmp/pg_basebackup.tar.bz2
-touch slave_synced
+touch ./slave_synced
 service postgresql start
   EOH
   action :run
