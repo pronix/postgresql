@@ -99,6 +99,19 @@ echo "CREATE USER #{node['postgresql']['recovery_user']} REPLICATION ENCRYPTED P
   only_if { node['postgresql']['recovery_user'].size > 0 && node['postgresql']['recovery_user_pass'].size > 0 }
 end
 
+bash "replicate slave from master" do
+  user 'postgres'
+  code <<-EOH
+pg_basebackup -w -R -h --dbname="host=#{node['postgresql']['master_ip']} user=#{node['postgresql']['recovery_user']} password=#{node['postgresql']['recovery_user_pass']}" -D - -P -Ft | bzip2 > /tmp/pg_basebackup.tar.bz2
+cd #{node['postgresql']['config']['data_directory']}
+rm -rf *
+tar -xjvf /tmp/pg_basebackup.tar.bz2
+touch slave_synced
+  EOH
+  action :run
+  only_if { !File.exists?(node['postgresql']['config']['data_directory']/slave_synced) && node['postgresql']['recovery']['standby_mode'] == 'on' }
+end
+
 bash "assign-postgres-password" do
   user 'postgres'
   code <<-EOH

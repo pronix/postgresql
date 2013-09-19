@@ -198,6 +198,7 @@ default['postgresql']['recovery']['trigger_file'] = ''
 # replica user creation
 default['postgresql']['recovery_user'] = ''
 default['postgresql']['recovery_user_pass'] = ''
+default['postgresql']['master_ip'] = ''
 
 default['postgresql']['pg_hba'] = [
   {:type => 'local', :db => 'all', :user => 'postgres', :addr => nil, :method => 'ident'},
