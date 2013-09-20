@@ -107,8 +107,9 @@ pg_basebackup -w -R -h #{node['postgresql']['master_ip']} --dbname="host=#{node[
 cd #{node['postgresql']['config']['data_directory']}
 rm -rf *
 tar -xjvf /tmp/pg_basebackup.tar.bz2
+sleep 1
+service postgresql start || service postgresql restart
 touch ./slave_synced
-service postgresql start
   EOH
   action :run
   only_if { !File.exists?("#{node['postgresql']['config']['data_directory']}/slave_synced") && node['postgresql']['recovery']['standby_mode'] == 'on' }
