@@ -184,7 +184,7 @@ default['postgresql']['config']['hot_standby_feedback'] = 'off'
 default['postgresql']['config']['wal_level'] = 'minimal'
 default['postgresql']['config']['archive_mode'] = 'off'
 default['postgresql']['config']['archive_command'] = ''
-default['postgresql']['config']['max_wal_senders'] = ''
+default['postgresql']['config']['max_wal_senders'] = '2'
 default['postgresql']['config']['wal_keep_segments'] = '4'
 
 # attributes for recovery.conf
