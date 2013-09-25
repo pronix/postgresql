@@ -51,6 +51,7 @@ node['postgresql']['server']['packages'].each do |pg_pack|
 
 end
 
+directory '/etc/sysconfig/pgsql'
 template "/etc/sysconfig/pgsql/#{node['postgresql']['server']['service_name']}" do
   source "pgsql.sysconfig.erb"
   mode "0644"
