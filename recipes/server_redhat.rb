@@ -59,7 +59,7 @@ template "/etc/sysconfig/pgsql/#{node['postgresql']['server']['service_name']}" 
 end
 
 if platform_family?("fedora")
-  execute "env PGDATA=/var/lib/pgsql/data /usr/pgsql-9.3/bin/initdb" do
+  execute "env PGDATA=/var/lib/pgsql/9.3/data /usr/pgsql-9.3/bin/initdb" do
     user 'postgres'
     not_if { ::FileTest.exist?(File.join(node['postgresql']['dir'], "PG_VERSION")) }
   end
