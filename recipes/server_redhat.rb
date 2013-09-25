@@ -58,12 +58,19 @@ template "/etc/sysconfig/pgsql/#{node['postgresql']['server']['service_name']}" 
   notifies :restart, "service[postgresql]", :delayed
 end
 
+if platform_family?("fedora")
+  execute "env PGDATA=/var/lib/pgsql/data /usr/pgsql-9.3/bin/initdb" do
+    user 'postgres'
+    not_if { ::FileTest.exist?(File.join(node['postgresql']['dir'], "PG_VERSION")) }
+  end
+else
 unless platform_family?("suse")
 
   execute "/sbin/service #{node['postgresql']['server']['service_name']} initdb" do
     not_if { ::FileTest.exist?(File.join(node['postgresql']['dir'], "PG_VERSION")) }
   end
 
+end
 end
 
 service "postgresql" do
