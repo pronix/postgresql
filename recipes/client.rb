@@ -32,3 +32,11 @@ node['postgresql']['client']['packages'].each do |pg_pack|
   package pg_pack
 
 end
+
+case node['platform']
+when "fedora"
+  link 'pg_config' do
+    to '/usr/pgsql-9.3/bin/pg_config'
+    target_file '/usr/bin/pg_config'
+  end
+end

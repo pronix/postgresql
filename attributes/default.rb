@@ -72,7 +72,7 @@ when "fedora"
   end
 
   default['postgresql']['dir'] = "/var/lib/pgsql/data"
-  default['postgresql']['client']['packages'] = %w{postgresql93-devel}
+  default['postgresql']['client']['packages'] = %w{postgresql93-devel postgresql93}
   default['postgresql']['server']['packages'] = %w{postgresql93-server}
   default['postgresql']['contrib']['packages'] = %w{postgresql93-contrib}
   default['postgresql']['server']['service_name'] = 'postgresql'
