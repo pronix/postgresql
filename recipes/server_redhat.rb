@@ -66,7 +66,7 @@ if platform_family?("fedora")
 else
 unless platform_family?("suse")
 
-  execute "/sbin/service #{node['postgresql']['server']['service_name']} initdb" do
+  execute "/sbin/service #{node['postgresql']['server']['service_name']} initdb #{node['postgresql']['initdb_locale']}" do
     not_if { ::FileTest.exist?(File.join(node['postgresql']['dir'], "PG_VERSION")) }
   end
 
