@@ -61,7 +61,7 @@ end
 if platform_family?('fedora')
   execute 'env PGDATA=/var/lib/pgsql/9.3/data /usr/pgsql-9.3/bin/initdb' do
     user 'postgres'
-    not_if { ::FileTest.exist?('/var/lib/pgsql/9.3')) }
+    not_if { ::FileTest.exist?('/var/lib/pgsql/9.3') }
   end
 else
 unless platform_family?("suse")
