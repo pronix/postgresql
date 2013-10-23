@@ -53,15 +53,15 @@ end
 
 directory '/etc/sysconfig/pgsql'
 template "/etc/sysconfig/pgsql/#{node['postgresql']['server']['service_name']}" do
-  source "pgsql.sysconfig.erb"
-  mode "0644"
+  source 'pgsql.sysconfig.erb'
+  mode '0644'
   notifies :restart, "service[postgresql]", :delayed
 end
 
-if platform_family?("fedora")
-  execute "env PGDATA=/var/lib/pgsql/9.3/data /usr/pgsql-9.3/bin/initdb" do
+if platform_family?('fedora')
+  execute 'env PGDATA=/var/lib/pgsql/9.3/data /usr/pgsql-9.3/bin/initdb' do
     user 'postgres'
-    not_if { ::FileTest.exist?(File.join(node['postgresql']['dir'], "PG_VERSION")) }
+    not_if { ::FileTest.exist?('/var/lib/pgsql/9.3')) }
   end
 else
 unless platform_family?("suse")
