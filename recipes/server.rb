@@ -71,7 +71,7 @@ template "#{node['postgresql']['dir']}/postgresql.conf" do
   owner "postgres"
   group "postgres"
   mode 0644
-  notifies :reload, 'service[postgresql]', :immediately
+  notifies :restart, 'service[postgresql]', :immediately
 end
 
 template "#{node['postgresql']['dir']}/pg_hba.conf" do
