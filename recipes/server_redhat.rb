@@ -59,6 +59,10 @@ template "/etc/sysconfig/pgsql/#{node['postgresql']['server']['service_name']}" 
 end
 
 if platform_family?('fedora')
+  execute 'move data if incorrect' do
+    command 'mv /var/lib/pgsql/9.3/data /root/tmp_postgresql_data'
+    not_if { ::FileTest.exist?('/var/lib/pgsql/9.3/data/global/pg_control') || !::FileTest.exist?('/var/lib/pgsql/9.3/data') }
+  end
   execute 'env PGDATA=/var/lib/pgsql/9.3/data /usr/pgsql-9.3/bin/initdb' do
     user 'postgres'
     not_if { ::FileTest.exist?('/var/lib/pgsql/9.3/data/global/pg_control') }
