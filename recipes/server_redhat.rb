@@ -64,17 +64,23 @@ if platform_family?('fedora')
     not_if { ::FileTest.exist?('/var/lib/pgsql/9.3') }
   end
 else
-unless platform_family?("suse")
+  unless platform_family?("suse")
 
-  execute "/sbin/service #{node['postgresql']['server']['service_name']} initdb #{node['postgresql']['initdb_locale']}" do
-    not_if { ::FileTest.exist?(File.join(node['postgresql']['dir'], "PG_VERSION")) }
+    execute "/sbin/service #{node['postgresql']['server']['service_name']} initdb #{node['postgresql']['initdb_locale']}" do
+      not_if { ::FileTest.exist?(File.join(node['postgresql']['dir'], "PG_VERSION")) }
+    end
+
   end
-
 end
+if platform_family?('fedora')
+  provider_service = Chef::Provider::Service::Systemd
+else
+  provider_service = Chef::Provider::Service::Init
 end
 
-service "postgresql" do
+service 'postgresql' do
   service_name node['postgresql']['server']['service_name']
+  provider provider_service
   supports :restart => true, :status => true, :reload => true
   action [:enable, :start]
 end
