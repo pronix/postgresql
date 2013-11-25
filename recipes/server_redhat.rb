@@ -55,7 +55,7 @@ directory '/etc/sysconfig/pgsql'
 template "/etc/sysconfig/pgsql/#{node['postgresql']['server']['service_name']}" do
   source 'pgsql.sysconfig.erb'
   mode '0644'
-  notifies :restart, "service[postgresql]", :delayed
+  notifies :restart, 'service[postgresql]', :delayed
 end
 
 if platform_family?('fedora')
@@ -81,6 +81,6 @@ end
 service 'postgresql' do
   service_name node['postgresql']['server']['service_name']
   provider provider_service
-  supports :restart => true, :status => true, :reload => true
-  action [:enable, :start]
+  supports restart: true, status: true, reload: true
+  action [:enable, :nothing]
 end
