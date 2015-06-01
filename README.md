@@ -15,7 +15,7 @@ Requirements
 
 Tested on:
 
-* Ubuntu 10.04, 11.10, 12.04
+* Ubuntu 10.04, 11.10, 12.04, 14.04, 14.10
 * Red Hat 6.1, Scientific 6.1, CentOS 6.3
 
 ## Cookbooks
@@ -46,6 +46,8 @@ The following attributes are set based on the platform, see the
   that should be installed on "client" systems.
 * `node['postgresql']['server']['packages']` - An array of package names
   that should be installed on "server" systems.
+* `node['postgresql']['server']['config_change_notify']` - Type of
+  notification triggered when a config file changes.
 * `node['postgresql']['contrib']['packages']` - An array of package names
   that could be installed on "server" systems for useful sysadmin tools.
 
@@ -107,7 +109,7 @@ is. So for example:
     node.default['postgresql']['config']['logging_collector'] = true
     node.default['postgresql']['config']['datestyle'] = 'iso, mdy'
     node.default['postgresql']['config']['ident_file'] = nil
-    node.default['postgresql']['config']['port] = 5432
+    node.default['postgresql']['config']['port'] = 5432
 
 Will result in the following config lines:
 
@@ -130,8 +132,8 @@ the array must be symbols. Each hash will be written as a line in
 `pg_hba.conf`. For example, this entry from
 `node['postgresql']['pg_hba']`:
 
-    {:comment => '# Optional comment',
-    :type => 'local', :db => 'all', :user => 'postgres', :addr => nil, :method => 'md5'}
+    [{:comment => '# Optional comment',
+    :type => 'local', :db => 'all', :user => 'postgres', :addr => nil, :method => 'md5'}]
 
 Will result in the following line in `pg_hba.conf`:
 
@@ -335,6 +337,10 @@ loads its shared library, which can be done with this node attribute:
 
     node['postgresql']['config']['shared_preload_libraries'] = 'pg_stat_statements'
 
+If using `shared_preload_libraries` in combination with the `contrib` recipe,
+make sure that the `contrib` recipe is called before the `server` recipe (to
+ensure the dependencies are installed and setup in order).
+
 apt\_pgdg\_postgresql
 ----------------------
 
@@ -361,6 +367,7 @@ values that will need to have embedded version numbers. For example:
     node['postgresql']['enable_pgdg_yum'] = true
     node['postgresql']['version'] = "9.2"
     node['postgresql']['dir'] = "/var/lib/pgsql/9.2/data"
+    node['postgresql']['config']['data_directory'] = node['postgresql']['dir']
     node['postgresql']['client']['packages'] = ["postgresql92", "postgresql92-devel"]
     node['postgresql']['server']['packages'] = ["postgresql92-server"]
     node['postgresql']['server']['service_name'] = "postgresql-9.2"
@@ -400,6 +407,12 @@ certificates and distribute them in your own cookbook, and set the
 `node['postgresql']['config']['ssl']` attribute to true in your
 role/cookboook/node.
 
+On server systems, the postgres server is restarted when a configuration
+file changes.  This can be changed to reload only by setting the
+following attribute:
+
+    node['postgresql']['server']['config_change_notify'] = :reload
+
 Chef Solo Note
 ==============
 
@@ -436,6 +449,7 @@ License and Author
 - Author:: Lamont Granquist (<lamont@opscode.com>)
 - Author:: Chris Roberts (<chrisroberts.code@gmail.com>)
 - Author:: David Crane (<davidc@donorschoose.org>)
+- Author:: Aaron Baer (<aaron@hw-ops.com>)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
