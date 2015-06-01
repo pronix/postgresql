@@ -89,11 +89,6 @@ elsif platform?("centos") and node['platform_version'].to_i >= 7
     not_if { ::FileTest.exist?(File.join(dir, "PG_VERSION")) }
   end
 
-else !platform_family?("suse")
-
-  execute "/sbin/service #{svc_name} initdb #{initdb_locale}" do
-    not_if { ::FileTest.exist?(File.join(dir, "PG_VERSION")) }
-  end
 else
   unless platform_family?("suse")
 
