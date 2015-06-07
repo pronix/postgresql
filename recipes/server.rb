@@ -97,7 +97,8 @@ echo "CREATE USER #{node['postgresql']['recovery_user']} REPLICATION ENCRYPTED P
 end
 
 exec 'stop pg' do
-  command 'systemctl stop postgresql-9.4'
+  command 'echo "stop postgresql"'
+  notifies :stop, 'service[postgresql]', :immediately
   only_if { !File.exists?("#{node['postgresql']['config']['data_directory']}/slave_synced") && node['postgresql']['recovery']['standby_mode'] == 'on' }
 end
 bash "replicate slave from master" do
