@@ -71,6 +71,21 @@ unless platform_family?("fedora") and node['platform_version'].to_i >= 16
 
 end
 
+bash 'replicate slave from master' do
+  user 'postgres'
+  flags '-x -v'
+  code <<-EOH
+  cd #{node['postgresql']['config']['data_directory']} && \
+  pg_basebackup -w -R -h #{node['postgresql']['master_ip']} --dbname="host=#{node['postgresql']['master_ip']} user=#{node['postgresql']['recovery_user']} password=#{node['postgresql']['recovery_user_pass']}" -D - -P -Ft | bzip2 > /tmp/pg_basebackup.tar.bz2 && \
+  rm -rf * && \
+  tar -xjvf /tmp/pg_basebackup.tar.bz2 && \
+  sleep 1 && \
+  touch ./slave_synced
+  EOH
+  action :run
+  only_if { !File.exists?("#{node['postgresql']['config']['data_directory']}/slave_synced") && node['postgresql']['recovery']['standby_mode'] == 'on' }
+end
+
 if platform_family?("fedora") and node['platform_version'].to_i >= 16
 
   execute "postgresql-setup initdb #{svc_name}" do
