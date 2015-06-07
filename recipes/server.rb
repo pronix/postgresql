@@ -96,7 +96,7 @@ echo "CREATE USER #{node['postgresql']['recovery_user']} REPLICATION ENCRYPTED P
   only_if { node['postgresql']['recovery_user'].size > 0 && node['postgresql']['recovery_user_pass'].size > 0 && node['postgresql']['recovery']['standby_mode'] == 'off'}
 end
 
-exec 'stop pg' do
+execute 'stop pg' do
   command 'echo "stop postgresql"'
   notifies :stop, 'service[postgresql]', :immediately
   only_if { !File.exists?("#{node['postgresql']['config']['data_directory']}/slave_synced") && node['postgresql']['recovery']['standby_mode'] == 'on' }
