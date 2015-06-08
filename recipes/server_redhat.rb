@@ -123,6 +123,6 @@ include_recipe "postgresql::server_conf"
 
 service "postgresql" do
   service_name svc_name
-  supports :restart => true, :status => true, :reload => true
+  supports :restart => true, :status => true, :reload => false
   action [:enable, :start]
 end
