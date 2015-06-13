@@ -66,7 +66,7 @@ unless platform_family?("fedora") and node['platform_version'].to_i >= 16
   template "/etc/sysconfig/pgsql/#{svc_name}" do
     source "pgsql.sysconfig.erb"
     mode "0644"
-    notifies :restart, "service[postgresql]", :delayed
+    notifies :start, "service[postgresql]", :delayed
   end
 
 end
@@ -124,5 +124,5 @@ include_recipe "postgresql::server_conf"
 service "postgresql" do
   service_name svc_name
   supports :restart => true, :status => true, :reload => false
-  action [:enable, :restart]
+  action [:enable, :start]
 end
